@@ -1,0 +1,47 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+*.egg-info/
+dist/
+build/
+
+# Model weights and checkpoints
+*.pt
+*.bin
+*.safetensors
+*.gguf
+
+# Feature caches (can be regenerated)
+cache/dino_features/
+cache/dino_features_randfloor/
+cache/dino_features_nofloor/
+cache/dino_features_target/
+cache/models/
+*.npz
+
+# Training output
+output/
+
+# Videos and visualizations
+*.mp4
+*.png
+*.jpg
+*.gif
+
+# Environment
+.env
+venv/
+.venv/
+
+# IDE
+.vscode/
+.idea/
+
+# Misc
+.DS_Store
+*.swp
+*.swo
+*~
+MUJOCO_LOG.TXT

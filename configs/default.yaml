@@ -1,0 +1,42 @@
+# GlanceVLA default config
+seed: 42
+
+data:
+  dataset_dirs:
+    - datasets/libero_object
+    - datasets/libero_spatial
+  feature_cache_dir: cache/dino_features
+  image_size: 224                 # DINOv2 input
+  chunk_size: 6                   # future frame count
+  stride: 1                       # sample step
+  # When debugging, restrict to first N hdf5 files. null = all.
+  max_files: null
+
+model:
+  dinov2_name: facebook/dinov2-base   # 768-dim CLS
+  llm_name: cache/models/Qwen/Qwen2-0___5B
+  vision_dim: 768
+  proprio_dim: 8                  # ee_pos(3) + ee_ori(3) + gripper_states(2)
+  action_dim: 7                   # 6 delta + 1 gripper
+  lora_r: 16
+  lora_alpha: 32
+  lora_dropout: 0.05
+  gradient_checkpointing: true
+
+train:
+  output_dir: output/run2
+  batch_size: 2
+  grad_accum_steps: 16
+  lr: 1.0e-4
+  weight_decay: 0.01
+  warmup_steps: 1000
+  max_steps: 50000
+  log_every: 20
+  save_every: 2500
+  precision: bf16
+  num_workers: 2
+
+loss:
+  lambda_vision: 0.5
+  lambda_action: 1.0
+  lambda_gripper: 0.1

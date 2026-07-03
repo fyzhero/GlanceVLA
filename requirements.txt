@@ -1,0 +1,14 @@
+torch>=2.0
+transformers>=4.40
+peft>=0.19
+h5py
+numpy>=1.24
+pillow
+pyyaml
+matplotlib
+tqdm
+huggingface_hub
+libero-libero
+robosuite
+bddl
+gymnasium

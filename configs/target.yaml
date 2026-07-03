@@ -1,0 +1,43 @@
+# GlanceVLA config for the supervised target-token variant (method 3).
+# Adds a 4th current-frame token produced by TargetAttentionPool, whose
+# attention over the agentview patch grid is supervised toward the
+# obj_of_interest heatmap. Requires a feature cache built with
+# scripts/extract_features_target.py (contains agent_patch + heatmap + valid).
+seed: 42
+
+data:
+  feature_cache_dir: cache/dino_features_target
+  chunk_size: 6
+  stride: 1
+  grid_size: 8                    # GxG pooled patch grid (must match extraction)
+
+model:
+  llm_name: cache/models/Qwen/Qwen2-0___5B
+  vision_dim: 768
+  proprio_dim: 8
+  action_dim: 7
+  lora_r: 16
+  lora_alpha: 32
+  lora_dropout: 0.05
+  gradient_checkpointing: true
+  use_target_token: true          # enable the supervised target token
+  target_attn_dim: 256            # query/key/value dim of TargetAttentionPool
+
+train:
+  output_dir: output/run_target
+  batch_size: 8
+  grad_accum_steps: 4
+  lr: 1.0e-4
+  weight_decay: 0.01
+  warmup_steps: 1000
+  max_steps: 50000
+  log_every: 20
+  save_every: 2500
+  precision: bf16
+  num_workers: 4
+
+loss:
+  lambda_vision: 0.5
+  lambda_action: 1.0
+  lambda_gripper: 0.1
+  lambda_target: 0.5              # weight on the attention-supervision loss
