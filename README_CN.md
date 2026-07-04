@@ -141,11 +141,15 @@ https://github.com/user-attachments/assets/25460f42-4dec-4c79-b56d-c8c6c9996bb6
   <tr>
     <td>
       <p align="center"><b>task1</b></p>  
+      
       https://github.com/user-attachments/assets/cf32a031-0c5b-4951-b3ec-558373fcafe3  
+      
     </td>
     <td>
       <p align="center"><b>task2</b></p>
+      
       https://github.com/user-attachments/assets/25460f42-4dec-4c79-b56d-c8c6c9996bb6
+      
     </td>
   </tr>
 </table>
