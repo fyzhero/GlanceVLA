@@ -49,9 +49,25 @@ def main() -> None:
     parser.add_argument("--resume", default=None,
                         help="checkpoint dir to resume from (restores weights, "
                              "optimizer, scheduler, and step)")
+    parser.add_argument("--load_weights", default=None,
+                        help="checkpoint dir to load weights only (warm-start finetune; "
+                             "optimizer and step are NOT restored)")
     args = parser.parse_args()
 
     cfg = load_config(args.config)
+
+    # Resolve relative paths to absolute (transformers requires /-prefixed local paths)
+    for key in ["llm_name", "dinov2_name", "output_dir", "feature_cache_dir"]:
+        val = cfg.get(key) or cfg.get("model", {}).get(key) or cfg.get("data", {}).get(key)
+        if val and not val.startswith("/") and not val.startswith("http"):
+            resolved = str(Path.cwd() / val)
+            if key in cfg:
+                cfg[key] = resolved
+            elif key in cfg.get("model", {}):
+                cfg["model"][key] = resolved
+            elif key in cfg.get("data", {}):
+                cfg["data"][key] = resolved
+
     for ov in args.overrides:
         k, v = ov.split("=", 1)
         cur = cfg
@@ -142,24 +158,28 @@ def main() -> None:
     lambda_g = cfg["loss"]["lambda_gripper"]
     lambda_t = cfg["loss"].get("lambda_target", 0.0)
 
-    # --- resume (restore weights + optimizer + scheduler + step) ---
+    # --- resume or load-weights-only ---
     start_step = 0
-    if args.resume:
-        resume_dir = Path(args.resume)
-        sd = torch.load(resume_dir / "trainable.pt", map_location=device)
+    if args.resume or args.load_weights:
+        ckpt_dir = Path(args.resume) if args.resume else Path(args.load_weights)
+        sd = torch.load(ckpt_dir / "trainable.pt", map_location=device)
         missing, unexpected = model.load_state_dict(sd, strict=False)
         if unexpected:
             print(f"[resume] WARNING unexpected keys: {unexpected[:5]}")
-        ts_path = resume_dir / "train_state.pt"
-        if ts_path.exists():
-            ts = torch.load(ts_path, map_location=device)
-            optim.load_state_dict(ts["optimizer"])
-            scheduler.load_state_dict(ts["scheduler"])
-            start_step = int(ts["step"])
-            print(f"[resume] restored optimizer+scheduler from step {start_step}")
+        if args.load_weights:
+            print(f"[load_weights] warmed up from {ckpt_dir.name}; "
+                  "fresh optimizer + step 0")
         else:
-            print(f"[resume] WARNING no train_state.pt in {resume_dir}; "
-                  f"weights loaded but optimizer/step reset to 0")
+            ts_path = ckpt_dir / "train_state.pt"
+            if ts_path.exists():
+                ts = torch.load(ts_path, map_location=device)
+                optim.load_state_dict(ts["optimizer"])
+                scheduler.load_state_dict(ts["scheduler"])
+                start_step = int(ts["step"])
+                print(f"[resume] restored optimizer+scheduler from step {start_step}")
+            else:
+                print(f"[resume] WARNING no train_state.pt in {ckpt_dir}; "
+                      f"weights loaded but optimizer/step reset to 0")
 
     # --- train loop ---
     model.train()

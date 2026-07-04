@@ -26,10 +26,10 @@ actions, proprio) PLUS the three target keys above. Written to a SEPARATE cache
 dir so it never clobbers the CLS-only features.
 
 Run (lerobot WSL env, repo root):
-    PYTHONPATH=$PWD:$PWD MUJOCO_GL=glx HF_HUB_OFFLINE=1 \
-      python scripts/extract_features_target.py \
+    PYTHONPATH=$PWD:$PWD/DQNet MUJOCO_GL=glx HF_HUB_OFFLINE=1 \
+      python DQNet/scripts/extract_features_target.py \
         --hdf5 datasets/libero_object/pick_up_the_alphabet_soup_and_place_it_in_the_basket_demo.hdf5 \
-        --out_dir cache/dino_features_target --grid_size 8
+        --out_dir DQNet/cache/dino_features_target --grid_size 8
 """
 
 from __future__ import annotations
@@ -44,7 +44,7 @@ import torch
 import torch.nn.functional as F
 import h5py
 
-sys.path.insert(0, ".")
+sys.path.insert(0, "DQNet")
 
 from libero.libero import get_libero_path
 from libero.libero.envs import SegmentationRenderEnv
@@ -141,12 +141,12 @@ def process_demo(env, encoder, states, grid_size, batch_size):
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--hdf5", default="datasets/libero_object/pick_up_the_alphabet_soup_and_place_it_in_the_basket_demo.hdf5")
-    ap.add_argument("--out_dir", default="cache/dino_features_target")
+    ap.add_argument("--out_dir", default="DQNet/cache/dino_features_target")
     ap.add_argument("--dinov2_name", default="facebook/dinov2-base")
     ap.add_argument("--grid_size", type=int, default=8)
     ap.add_argument("--batch_size", type=int, default=64)
     ap.add_argument("--max_demos", type=int, default=None, help="limit demos (debug)")
-    ap.add_argument("--llm_name", default="cache/models/Qwen/Qwen2-0___5B",
+    ap.add_argument("--llm_name", default=str(Path.cwd() / "DQNet/cache/models/Qwen/Qwen2-0___5B"),
                     help="LLM for instruction embedding (CLS token)")
     ap.add_argument("--embed_instruction", action="store_true",
                     help="Extract instruction CLS embedding and store in NPZ")

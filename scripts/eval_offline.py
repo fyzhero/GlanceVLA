@@ -13,10 +13,10 @@ open-loop, then re-observe and predict again (receding-horizon control).
 
 Run (inside the lerobot WSL env, from repo root):
     PYTHONPATH=$PWD MUJOCO_GL=glx \
-        python scripts/eval_offline.py \
-        --ckpt output/run1/ckpt_final \
+        python DQNet/scripts/eval_offline.py \
+        --ckpt DQNet/output/run1/ckpt_final \
         --task_suite libero_object --task_id 0 \
-        --n_episodes 3 --max_steps 300 --video_dir output/eval_videos
+        --n_episodes 3 --max_steps 300 --video_dir DQNet/output/eval_videos
 """
 
 from __future__ import annotations
@@ -30,7 +30,7 @@ import numpy as np
 import torch
 from PIL import Image, ImageFilter
 
-sys.path.insert(0, ".")
+sys.path.insert(0, "DQNet")
 
 import robosuite.utils.transform_utils as T
 from libero.libero import benchmark, get_libero_path
@@ -200,13 +200,13 @@ def setup_from_demo(args):
 
 def main() -> None:
     parser = argparse.ArgumentParser()
-    parser.add_argument("--ckpt", default="output/run1/ckpt_final")
+    parser.add_argument("--ckpt", default="DQNet/output/run1/ckpt_final")
     parser.add_argument("--task_suite", default="libero_object")
     parser.add_argument("--task_id", type=int, default=0)
     parser.add_argument("--n_episodes", type=int, default=3)
     parser.add_argument("--max_steps", type=int, default=300)
     parser.add_argument("--precision", default="bf16", choices=["bf16", "fp32"])
-    parser.add_argument("--video_dir", default="output/eval_videos")
+    parser.add_argument("--video_dir", default="DQNet/output/eval_videos")
     parser.add_argument("--dinov2_name", default="facebook/dinov2-base")
     parser.add_argument("--camera_size", type=int, default=128)
     parser.add_argument("--hdf5", default=None,

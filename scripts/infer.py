@@ -10,7 +10,7 @@ provides a `FeatureEncoder` whose preprocessing matches
 -> CLS token). Use it when running on live env frames.
 
 Quick check against cached features (no DINOv2 needed):
-    python -m GlanceVLA.scripts.infer --ckpt output/run1/ckpt_final --from_cache
+    python -m DQNet.scripts.infer --ckpt DQNet/output/run1/ckpt_final --from_cache
 
 Live usage (encode raw RGB):
     encoder = FeatureEncoder(device=...)
@@ -29,7 +29,7 @@ import yaml
 
 import sys
 
-sys.path.insert(0, ".")
+sys.path.insert(0, "DQNet")
 
 from dqnet.models.dqnet import DQNet, DQNetConfig
 
@@ -40,6 +40,9 @@ def load_policy(ckpt_dir: str | Path, device: torch.device, dtype: torch.dtype) 
     with open(ckpt_dir / "config.yaml") as f:
         saved = yaml.safe_load(f)
 
+    # Resolve relative paths to absolute (transformers requires /-prefixed local paths)
+    if "llm_name" in saved and not saved["llm_name"].startswith("/"):
+        saved["llm_name"] = str(Path.cwd() / saved["llm_name"])
     cfg = DQNetConfig(**saved)
     model = DQNet(cfg).to(device).to(dtype)
 
@@ -118,7 +121,7 @@ def _demo_from_cache(model: DQNet, device: torch.device) -> None:
     from dqnet.data.dataset import LiberoChunkDataset, find_shards, collate_fn
     from torch.utils.data import DataLoader
 
-    ds = LiberoChunkDataset(find_shards("cache/dino_features"), chunk_size=model.cfg.chunk_size)
+    ds = LiberoChunkDataset(find_shards("DQNet/cache/dino_features"), chunk_size=model.cfg.chunk_size)
     loader = DataLoader(ds, batch_size=1, collate_fn=collate_fn, shuffle=True)
     batch = next(iter(loader))
 
@@ -136,7 +139,7 @@ def _demo_from_cache(model: DQNet, device: torch.device) -> None:
 
 def main() -> None:
     parser = argparse.ArgumentParser()
-    parser.add_argument("--ckpt", default="output/run1/ckpt_final")
+    parser.add_argument("--ckpt", default="DQNet/output/run1/ckpt_final")
     parser.add_argument("--precision", default="bf16", choices=["bf16", "fp32"])
     parser.add_argument("--from_cache", action="store_true",
                         help="Run a sanity rollout on one cached feature window.")
