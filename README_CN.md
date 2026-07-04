@@ -132,7 +132,9 @@ PYTHONPATH=$PWD MUJOCO_GL=glx HF_HUB_OFFLINE=1 python scripts/viz_target_attenti
 | 不同任务（bbq sauce） | **0%** (0/10) |
 
 > **关键发现：** 目标 token 的注意力对背景变化具有鲁棒性（OOD 场景下 argmax-hit = 100%），但整体策略在 OOD 上失败，因为全局 CLS token 依赖于背景。瓶颈在 CLS 表征，不在目标 token。
+
 https://github.com/user-attachments/assets/cf32a031-0c5b-4951-b3ec-558373fcafe3
+
 https://github.com/user-attachments/assets/25460f42-4dec-4c79-b56d-c8c6c9996bb6
 
 <table>
