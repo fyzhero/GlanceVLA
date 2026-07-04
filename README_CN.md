@@ -49,7 +49,7 @@ total = λ_v·vision + λ_a·action + λ_g·gripper + λ_t·target
 ### 环境搭建
 
 ```bash
-git clone <repo-url>
+git clone git@github.com:fyzhero/GlanceVLA.git
 cd GlanceVLA
 
 # 依赖
@@ -131,7 +131,8 @@ PYTHONPATH=$PWD MUJOCO_GL=glx HF_HUB_OFFLINE=1 python scripts/viz_target_attenti
 | pick_alphabet_soup未见过的地板纹理 | **40%** (2/5) |
 | pick_chocolate_pudding未见过的地板纹理 | **100%** (5/5) |
 
-
+<img width="495" height="660" alt="attention_alphabet_soup" src="https://github.com/user-attachments/assets/57e28d25-7e7c-4d5f-8b96-fa72045ad23e" />
+<img width="495" height="660" alt="attention_chocolate_pudding" src="https://github.com/user-attachments/assets/55ee7324-dee6-4fb7-8a1f-51bbadb92fa4" />
 > **关键发现：** 目标 token 的注意力对背景变化具有鲁棒性（OOD 场景下 argmax-hit = 100%），在未见过的地板纹理场景下，具有一定zero-shot泛化能力。
 
 https://github.com/user-attachments/assets/e366c865-ed5b-45f3-a3fd-155a9cb20692
