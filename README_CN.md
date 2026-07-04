@@ -127,7 +127,7 @@ PYTHONPATH=$PWD MUJOCO_GL=glx HF_HUB_OFFLINE=1 python scripts/viz_target_attenti
 | 条件 | 成功率 |
 |------|--------|
 | pick_alphabet_soup场景，5 个不同初始状态 | **100%** (5/5) |
-| pick_chocolate_pudding场景，10 个不同初始状态 | **80%** (4/5) |
+| pick_chocolate_pudding场景，5 个不同初始状态 | **80%** (4/5) |
 | pick_alphabet_soup未见过的地板纹理 | **40%** (2/5) |
 | pick_chocolate_pudding未见过的地板纹理 | **100%** (5/5) |
 
