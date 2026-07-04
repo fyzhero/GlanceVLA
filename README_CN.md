@@ -126,20 +126,18 @@ PYTHONPATH=$PWD MUJOCO_GL=glx HF_HUB_OFFLINE=1 python scripts/viz_target_attenti
 
 | 条件 | 成功率 |
 |------|--------|
-| 同场景，10 个不同初始状态（demo_0~9） | **80%** (8/10) |
-| 同场景，10 个不同初始状态（demo_40~49） | **80%** (8/10) |
-| 未见过的地板纹理（tb_3） | **50%** (5/10) |
-| 不同任务（bbq sauce） | **0%** (0/10) |
+| pick_alphabet_soup场景，5 个不同初始状态 | **100%** (5/5) |
+| pick_chocolate_pudding场景，10 个不同初始状态 | **80%** (4/5) |
+| pick_alphabet_soup未见过的地板纹理 | **40%** (2/5) |
+| pick_chocolate_pudding未见过的地板纹理 | **100%** (5/5) |
 
-> **关键发现：** 目标 token 的注意力对背景变化具有鲁棒性（OOD 场景下 argmax-hit = 100%），但整体策略在 OOD 上失败，因为全局 CLS token 依赖于背景。瓶颈在 CLS 表征，不在目标 token。
 
-https://github.com/user-attachments/assets/cf32a031-0c5b-4951-b3ec-558373fcafe3
+> **关键发现：** 目标 token 的注意力对背景变化具有鲁棒性（OOD 场景下 argmax-hit = 100%），在未见过的地板纹理场景下，具有一定zero-shot泛化能力。
 
-https://github.com/user-attachments/assets/25460f42-4dec-4c79-b56d-c8c6c9996bb6
+https://github.com/user-attachments/assets/e366c865-ed5b-45f3-a3fd-155a9cb20692
 
-<div align="center">
-  https://github.com/user-attachments/assets/cf32a031-0c5b-4951-b3ec-558373fcafe3
-</div>
+https://github.com/user-attachments/assets/a66fbfd8-719c-40e4-b409-188659e0d1a5
+
 
 ### 训练损失演化
 
@@ -172,21 +170,14 @@ https://github.com/user-attachments/assets/25460f42-4dec-4c79-b56d-c8c6c9996bb6
 
 评测维度：LIBERO 成功率、LIBERO-plus 扰动维度、注意力-GT 对齐度。
 
-## 已知问题与工程笔记
-
-- **必须使用 exec_horizon=1。** 全 chunk 自回归 rollout（6 步）会导致漂移累积，策略失败。评测/部署时务必使用 `--exec_horizon 1`。
-- **损失地板效应：** Total loss 稳定在 0.96 附近，因为 target 项有熵下限（~1.73）。应关注 `action_loss` 和 `vision_loss` 判断训练进展。
-- **目标 token 使用 obj_of_interest 的并集。** 默认监督信号合并了 `obj_of_interest` 中的所有物体（如 soup 和 basket）。如需聚焦单一操作物体，编辑 `extract_features_target.py` 中的 `target_mask()`。
-- **指令感知的目标 token。** 目标 token 的查询受任务指令条件调制，提供语义 grounding。
-
 ## 引用
 
 ```bibtex
-@article{gazevla2025,
+@article{GlanceVLA2026,
   title={GlanceVLA: Target-Focused Supervision for Lightweight Vision-Language-Action Models},
-  author={},
-  journal={arXiv preprint arXiv:{xxxx.xxxxx}},
-  year={2025},
+  author={fyzhero},
+  journal={},
+  year={2026},
 }
 ```
 
