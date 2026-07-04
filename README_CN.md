@@ -133,7 +133,7 @@ PYTHONPATH=$PWD MUJOCO_GL=glx HF_HUB_OFFLINE=1 python scripts/viz_target_attenti
 
 > **关键发现：** 目标 token 的注意力对背景变化具有鲁棒性（OOD 场景下 argmax-hit = 100%），但整体策略在 OOD 上失败，因为全局 CLS token 依赖于背景。瓶颈在 CLS 表征，不在目标 token。
 
-<video src="https://youtube.com/shorts/9l5G6rHcmL4?si=e9Yj3FR5K0_Fh21V" controls width="256"></video>
+https://youtube.com/shorts/9l5G6rHcmL4?si=e9Yj3FR5K0_Fh21V
 
 ### 训练损失演化
 
