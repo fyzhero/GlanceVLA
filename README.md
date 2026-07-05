@@ -49,7 +49,7 @@ total = λ_v·vision + λ_a·action + λ_g·gripper + λ_t·target
 ### Setup
 
 ```bash
-git clone <repo-url>
+git clone git@github.com:fyzhero/GlanceVLA.git
 cd GlanceVLA
 
 # Dependencies
@@ -126,12 +126,18 @@ The target token learns to look at the manipulation object within a few thousand
 
 | Condition | Success Rate |
 |-----------|-------------|
-| Same scene, 10 different initial states (demo_0~9) | **80%** (8/10) |
-| Same scene, 10 different initial states (demo_40~49) | **80%** (8/10) |
-| Unseen floor texture (tb_3) | **50%** (5/10) |
-| Different task (bbq sauce) | **0%** (0/10) |
+| pick_alphabet_soup, 5 different initial states | **100%** (5/5) |
+| pick_chocolate_pudding, 5 different initial states | **80%** (4/5) |
+| pick_alphabet_soup, unseen floor texture | **40%** (2/5) |
+| pick_chocolate_pudding, unseen floor texture | **100%** (5/5) |
 
-> **Finding:** The target token's attention is robust to background changes (OOD argmax-hit = 100%), but the overall policy fails because the global CLS token depends on background. The bottleneck is in the CLS representation, not the target token.
+<img width="495" height="660" alt="attention_alphabet_soup" src="https://github.com/user-attachments/assets/57e28d25-7e7c-4d5f-8b96-fa72045ad23e" />
+<img width="495" height="660" alt="attention_chocolate_pudding" src="https://github.com/user-attachments/assets/55ee7324-dee6-4fb7-8a1f-51bbadb92fa4" />
+> **Finding:** The target token's attention is robust to background changes (OOD argmax-hit = 100%), and exhibits zero-shot transfer capability in unseen floor texture scenarios.
+
+https://github.com/user-attachments/assets/e366c865-ed5b-45f3-a3fd-155a9cb20692
+
+https://github.com/user-attachments/assets/a66fbfd8-719c-40e4-b409-188659e0d1a5
 
 ### Training Loss Progression
 
@@ -176,11 +182,11 @@ Evaluated on LIBERO success rate, LIBERO-plus perturbation dimensions, and atten
 If you use this code for your research, please cite:
 
 ```bibtex
-@article{gazevla2025,
+@article{GlanceVLA2026,
   title={GlanceVLA: Target-Focused Supervision for Lightweight Vision-Language-Action Models},
-  author={},
-  journal={arXiv preprint arXiv:{xxxx.xxxxx}},
-  year={2025},
+  author={fyzhero},
+  journal={},
+  year={2026},
 }
 ```
 
