@@ -133,6 +133,7 @@ The target token learns to look at the manipulation object within a few thousand
 
 <img width="495" height="660" alt="attention_alphabet_soup" src="https://github.com/user-attachments/assets/57e28d25-7e7c-4d5f-8b96-fa72045ad23e" />
 <img width="495" height="660" alt="attention_chocolate_pudding" src="https://github.com/user-attachments/assets/55ee7324-dee6-4fb7-8a1f-51bbadb92fa4" />
+
 > **Finding:** The target token's attention is robust to background changes (OOD argmax-hit = 100%), and exhibits zero-shot transfer capability in unseen floor texture scenarios.
 
 https://github.com/user-attachments/assets/e366c865-ed5b-45f3-a3fd-155a9cb20692
